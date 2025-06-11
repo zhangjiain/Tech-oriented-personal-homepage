@@ -193,7 +193,7 @@
     // 获取状态的函数
 async function getStatus() {
     try {
-        const response = await fetch('get_status.php');
+        const response = await fetch('/get_status.php');
         const result = await response.json();
         
         if (result.success) {
