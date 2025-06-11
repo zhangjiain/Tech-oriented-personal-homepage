@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>唱跳Rap 篮球 - Ctrl面板</title>
+    <style>
+        @charset "utf-8";
+
+        /* 使用系统字体 */
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            transition: all 0.2s;
+        }
+
+        /* 美化滚动条 */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        ::-webkit-scrollbar-track {
+            border-radius: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: #E0E0E0;
+            user-select: none;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 定义主盒子 - 仿照原网站样式 */
+        #main-box {
+            max-width: 1400px;
+            border-radius: 50px;
+            background: #e0e0e0;
+            box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+            padding: 30px;
+            margin: 0 auto;
+            margin-top: 20px;
+            min-height: calc(100vh - 80px);
+            box-sizing: border-box;
+        }
+
+        /* 定义顶部样式 */
+        #head {
+            padding: 16px 0;
+            border-radius: 35px;
+            background: #e0e0e0;
+            box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #head h1 {
+            font-size: 30px;
+            padding: 20px;
+            color: #333;
+        }
+
+        #head p {
+            font-size: 16px;
+            color: #666;
+            padding: 0 20px 10px;
+        }
+
+        /* 主要内容区域 - 使用 flex 布局 */
+        #main-content {
+            display: flex;
+            gap: 30px;
+            height: calc(100vh - 280px);
+            box-sizing: border-box;
+        }
+
+        /* 左侧控制区域 */
+        #left-controls {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        /* 右侧日志区域 */
+        #right-logs {
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 当前状态显示区域 */
+        #status-display {
+            padding: 20px;
+            border-radius: 35px;
+            background: #e0e0e0;
+            box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
+            flex-shrink: 0;
+        }
+
+        .status-info {
+            padding: 11px 20px;
+            height: 18px;
+            line-height: 18px;
+            font-size: 16px;
+            transition: all 0.5s;
+        }
+
+        .status-info:hover {
+            transition: all 1s;
+            border-radius: 3px;
+            background: #e0e0e0;
+            box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
+        }
+
+        .status-text {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* 控制面板区域 */
+        .control-section {
+            padding: 25px;
+            border-radius: 35px;
+            background: #e0e0e0;
+            box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* 仿照原网站卡片样式的按钮 */
+        .control-btn {
+            height: 60px;
+            border-radius: 10px;
+            background: #e0e0e0;
+            box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.5s;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .control-btn:hover {
+            box-shadow: #616161 0 3px 10px;
+            transform: translate(0px, -5px);
+            transition: all 0.5s;
+        }
+
+        .control-btn.active {
+            color: #03A9F4;
+            box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
+        }
+
+        .control-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff !important;
+        }
+
+        /* 加载动画 */
+        .loading {
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #03A9F4;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 消息提示区域 */
+        #message-area {
+            padding: 25px;
+            border-radius: 35px;
+            background: #e0e0e0;
+            box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        #messageContainer {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .message {
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.5s;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message.success {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 2px solid rgba(40, 167, 69, 0.3);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+        }
+
+        .message.error {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+            border: 2px solid rgba(220, 53, 69, 0.3);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+        }
+
+        .message.info {
+            background: rgba(3, 169, 244, 0.15);
+            color: #03A9F4;
+            border: 2px solid rgba(3, 169, 244, 0.3);
+            box-shadow: 0 4px 12px rgba(3, 169, 244, 0.2);
+        }
+
+        .message.warning {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+        }
+
+        /* 状态指示器 */
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.online {
+            background: #28a745;
+        }
+
+        .status-indicator.busy {
+            background: #ffc107;
+        }
+
+        .status-indicator.offline {
+            background: #dc3545;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media only screen and (max-width: 1200px) {
+            #main-content {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            #right-logs {
+                width: 100%;
+            }
+            
+            #message-area {
+                min-height: 300px;
+            }
+        }
+
+        @media only screen and (max-width: 639px) {
+            #main-box {
+                margin: 10px;
+                margin-top: 10px;
+                padding: 20px;
+                min-height: calc(100vh - 40px);
+            }
+            
+            .button-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            #main-content {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main-box">
+        <div id="head">
+            <h1>🎛️ 个人主页状态控制面板</h1>
+            <p>实时修改您的 index.html 文件中的状态信息</p>
+        </div>
+
+        <div id="main-content">
+            <!-- 左侧控制区域 -->
+            <div id="left-controls">
+                <!-- 当前状态显示 -->
+                <div id="status-display">
+                    <div class="section-title">[ 当前状态 ]</div>
+                    <div class="status-info">
+                        <span class="status-indicator online" id="statusIndicator"></span>
+                        📍 状态：<span id="currentStatusField">牛马</span>（<span class="status-text" id="currentStatusText">睡觉中</span>）
+                    </div>
+                </div>
+
+                <!-- 状态文本控制 -->
+                <div class="control-section">
+                    <div class="section-title">[ 状态文本控制 ]</div>
+                    <div class="button-grid">
+                        <button class="control-btn" onclick="updateStatus('text', '睡觉中')">😴 睡觉中</button>
+                        <button class="control-btn" onclick="updateStatus('text', '工作中')">💼 工作中</button>
+                        <button class="control-btn" onclick="updateStatus('text', '学习中')">📚 学习中</button>
+                        <button class="control-btn" onclick="updateStatus('text', '休息中')">☕ 休息中</button>
+                        <button class="control-btn" onclick="updateStatus('text', '摸鱼中')">🐟 摸鱼中</button>
+                        <button class="control-btn" onclick="updateStatus('text', '离线中')">🔌 离线中</button>
+                        <button class="control-btn" onclick="updateStatus('text', '游戏中')">🎮 游戏中</button>
+                        <button class="control-btn" onclick="updateStatus('text', '忙碌中')">⚡ 忙碌中</button>
+                    </div>
+                </div>
+
+                <!-- 状态字段控制 -->
+                <div class="control-section">
+                    <div class="section-title">[ 状态字段控制 ]</div>
+                    <div class="button-grid">
+                        <button class="control-btn" onclick="updateStatus('field', '牛马')">🐮 牛马</button>
+                        <button class="control-btn" onclick="updateStatus('field', '打工人')">👷 打工人</button>
+                        <button class="control-btn" onclick="updateStatus('field', '学生党')">🎓 学生党</button>
+                        <button class="control-btn" onclick="updateStatus('field', '自由人')">🦅 自由人</button>
+                        <button class="control-btn" onclick="updateStatus('field', '夜猫子')">🌙 夜猫子</button>
+                        <button class="control-btn" onclick="updateStatus('field', '社畜')">🏢 社畜</button>
+                        <button class="control-btn" onclick="updateStatus('field', '码农')">💻 码农</button>
+                        <button class="control-btn" onclick="updateStatus('field', '躺平族')">🛌 躺平族</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧日志区域 -->
+            <div id="right-logs">
+                <!-- 消息提示区域 -->
+                <div id="message-area">
+                    <div class="section-title">[ 操作日志 ]</div>
+                    <div id="messageContainer">
+                        <div class="message info show">
+                            <span class="status-indicator online"></span>系统已就绪，等待您的操作...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentStatus = {
+            text: '睡觉中',
+            field: '牛马'
+        };
+
+        // 更新状态的主函数
+        async function updateStatus(type, value) {
+            const button = event.target;
+            
+            // 禁用按钮并显示加载状态
+            button.disabled = true;
+            button.classList.add('loading');
+            
+            try {
+                // 发送请求到PHP后端
+                const response = await fetch('update_status.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: type,
+                        value: value
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 更新成功
+                    if (type === 'text') {
+                        currentStatus.text = value;
+                        document.getElementById('currentStatusText').textContent = value;
+                        updateStatusIndicator(value);
+                    } else if (type === 'field') {
+                        currentStatus.field = value;
+                        document.getElementById('currentStatusField').textContent = value;
+                    }
+                    
+                    updateActiveButtons();
+                    showMessage(`✅ ${type === 'text' ? '状态文本' : '状态字段'}已成功更新为: ${value}`, 'success');
+                } else {
+                    // 更新失败
+                    showMessage(`❌ 更新失败: ${result.message || '未知错误'}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('请求失败:', error);
+                showMessage(`❌ 网络请求失败: ${error.message}`, 'error');
+            } finally {
+                // 恢复按钮状态
+                button.disabled = false;
+                button.classList.remove('loading');
+            }
+        }
+
+        // 更新状态指示器
+        function updateStatusIndicator(statusText) {
+            const indicator = document.getElementById('statusIndicator');
+            indicator.className = 'status-indicator';
+            
+            if (['工作中', '学习中', '忙碌中'].includes(statusText)) {
+                indicator.classList.add('busy');
+            } else if (['离线中', '睡觉中'].includes(statusText)) {
+                indicator.classList.add('offline');
+            } else {
+                indicator.classList.add('online');
+            }
+        }
+
+        // 更新按钮激活状态
+        function updateActiveButtons() {
+            // 清除所有激活状态
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 设置当前状态按钮为激活
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                const btnText = btn.textContent.replace(/[^\u4e00-\u9fa5a-zA-Z]/g, ''); // 去除emoji和空格
+                if (btnText === currentStatus.text || btnText === currentStatus.field) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // 显示消息
+        function showMessage(text, type = 'info') {
+            const container = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            // 添加时间戳
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString();
+            
+            messageDiv.innerHTML = `
+                <span class="status-indicator ${type === 'success' ? 'online' : type === 'error' ? 'offline' : 'busy'}"></span>
+                [${timeStr}] ${text}
+            `;
+            
+            container.appendChild(messageDiv);
+            
+            // 触发动画
+            setTimeout(() => {
+                messageDiv.classList.add('show');
+            }, 100);
+            
+            // 限制消息数量，超过8条删除最旧的
+            const messages = container.querySelectorAll('.message');
+            if (messages.length > 8) {
+                const oldestMessage = messages[0];
+                oldestMessage.style.opacity = '0';
+                oldestMessage.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (oldestMessage.parentNode) {
+                        oldestMessage.parentNode.removeChild(oldestMessage);
+                    }
+                }, 300);
+            }
+            
+            // 滚动到最新消息
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // 获取当前状态
+        async function getCurrentStatus() {
+            try {
+                const response = await fetch('get_status.php');
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentStatus = result.data;
+                    document.getElementById('currentStatusText').textContent = currentStatus.text;
+                    document.getElementById('currentStatusField').textContent = currentStatus.field;
+                    updateStatusIndicator(currentStatus.text);
+                    updateActiveButtons();
+                    showMessage('📡 状态同步成功', 'success');
+                } else {
+                    showMessage('⚠️ 状态同步失败，使用默认值', 'warning');
+                }
+            } catch (error) {
+                showMessage('⚠️ 无法连接服务器，使用默认值', 'warning');
+            }
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('load', function() {
+            updateActiveButtons();
+            updateStatusIndicator(currentStatus.text);
+            getCurrentStatus();
+            
+            // 每30秒自动同步一次状态
+            setInterval(getCurrentStatus, 30000);
+        });
+    </script>
+</body>
+</html>

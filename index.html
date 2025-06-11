@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+   <!-- 腾 飞 博 客 tf blog cn -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <title>个人主页</title>
+    <!-- 引入Bootstrap icon图标库 -->
+    <link rel="stylesheet" href="bootstrap-icons.css">
+
+    <!-- CSS文件 -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* 时间显示样式优化 */
+        #time {
+            color: #2c3e50 !important; /* 深蓝灰色，更显眼 */
+            font-weight: 600 !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+            margin-top: 10px !important;
+        }
+        
+        /* 状态指示器样式 */
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: statusPulse 2s infinite;
+        }
+        
+        .status-indicator.online {
+            background: #28a745;
+        }
+        
+        .status-indicator.busy {
+            background: #ffc107;
+        }
+        
+        .status-indicator.offline {
+            background: #dc3545;
+        }
+        
+        @keyframes statusPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 8px rgba(40, 167, 69, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+            }
+        }
+        
+        /* 状态同步提示 */
+        .sync-status {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            text-align: center;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .sync-status.success {
+            color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+        
+        .sync-status.error {
+            color: #dc3545;
+            background: rgba(220, 53, 69, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main-box">
+        <div id="head">
+            <img id="touxiang" src="http://q1.qlogo.cn/g?b=qq&nk=2740996370&s=100">
+            <p id="nick">又睡过了黎明</p>
+            <!-- 调用一言文字API ，如不使用请将此段注释掉，并将下段的注释取消掉 -->
+            <p id="info"><span id="hitokoto_text">ヾ(•ω•`)o加载中……</span></p>
+            <!-- 显示自定义一段文字 -->
+            <!-- <p id="info">凡是美好 都留有遗憾</p> -->
+            <div id="time"></div>
+            <div class="sync-status" id="syncStatus">状态同步中...</div>
+        </div>
+        <div id="main-1">
+            <p class="title">[ 别人的网站 ]</p>
+            <!-- 如果你要更换卡片背景图的话
+                        背景图大小为：180×70 （高斯模糊效果需要自己添加）-->
+            <p class="kapian" style="background: url(img/demo.jpg) center;">
+                <a href="https://www.httple.net/" target="_blank" style="color: #000;">
+                    <span class="kapian-title"><i class="bi bi-github"></i> 资源宝</span>
+                </a>
+            </p>
+            <p class="kapian" style="background: url(img/fwq.jpg) center;">
+                <a href="https://www.httple.net/" target="_blank" style="color: #000;">
+                    <span class="kapian-title"><i class="bi bi-github"></i> 资源宝</span>
+                </a>
+            </p>
+        </div>
+        <div id="main-2">
+            <p class="main-2-text">
+                <i class="bi bi-gender-male" style="color: blue;"></i>
+                性别：男
+            </p>
+            <p class="main-2-text">
+                <i class="bi bi-activity" style="color: #ff3d00;"></i>
+                年龄：20
+            </p>
+            <p class="main-2-text">
+                <i class="bi bi-geo-alt-fill" style="color: #304ffe;"></i>
+                出生于：河南 · 洛阳
+            </p>
+            <p class="main-2-text" id="status-line">
+                <i class="bi bi-app-indicator" style="color: #dd2c00;"></i>
+                状态：<span id="statusField">码农</span>（<span class="status-indicator online" id="statusIndicator"></span><span style="color: red;" id="statusText">休息中</span>）
+            </p>
+            <p class="main-2-text">
+                <i class="bi bi-chat-dots-fill" style="color: #00c853;"></i>
+                QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=2740996370&site=qq&menu=yes" target="_blank">2740996370</a>
+            </p>
+            <p class="main-2-text">
+                <i class="bi bi-envelope"></i>
+                Email：<a href=" target=" _blank">111642@163.com</a>
+            </p>
+        </div>
+        <div id="main-3">
+            <p class="title">[ 友情链接 ]</p>
+            <!-- 如果你要更换卡片背景图的话
+                        背景图大小为：180×70 （高斯模糊效果需要自己添加，最好在背景图周围添加一点淡淡的白色，这样效果更加~）-->
+            <p class="kapian" style="background: url(img/boke.jpg) center;">
+                <a href="#" style="color: #000;">
+                    <span class="kapian-title"><i class="bi bi-journal-richtext"></i>待添加</span>
+                </a>
+            </p>
+            <p class="kapian" style="background: url(img/i.jpg) center;">
+                <a href="#" style="color: #000;">
+                    <span class="kapian-title"><i class="bi bi-heart"></i>待添加</span>
+                </a>
+            </p>
+        </div>
+        <div id="footer">
+            &copy;2025 <a href="#" style="color: #000;">1.94.102.9</a>
+        </div>
+    </div>
+    
+    <!-- 一言API -->
+    <!-- 如果不启用API请将整段 script 注释掉 -->
+    <script>
+    
+        // 代表引用来自网络相关的文案
+        fetch('https://v1.hitokoto.cn/?j=k')
+            .then(response => response.json())
+            .then(data => {
+                const hitokoto = document.getElementById('hitokoto_text')
+                hitokoto.innerText = data.hitokoto
+            })
+
+        function updateTime() {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var weekDay = date.getDay();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds();
+
+            var weekDays = ['难过星期日', '黑色星期一', '痛苦星期二', '焦虑星期三', '疯狂星期四', '快乐星期五', '愉悦星期六'];
+
+            var timeString = year + '年' + month + '月' + day + '日 ' + weekDays[weekDay] + ' ' + hours + ':' + minutes + ':' + seconds;
+
+            document.getElementById('time').innerText = timeString;
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    
+    
+    
+    
+    
+    // 获取状态的函数
+async function getStatus() {
+    try {
+        const response = await fetch('get_status.php');
+        const result = await response.json();
+        
+        if (result.success) {
+            // 更新页面上的状态显示
+            const statusField = document.getElementById('statusField');
+            const statusText = document.getElementById('statusText');
+            
+            if (statusField && result.data.field) {
+                statusField.textContent = result.data.field;
+            }
+            
+            if (statusText && result.data.text) {
+                statusText.textContent = result.data.text;
+            }
+            
+            console.log('状态更新成功:', result.data);
+        } else {
+            console.error('获取状态失败:', result.message);
+        }
+    } catch (error) {
+        console.error('请求失败:', error);
+    }
+}
+
+// 页面加载完成后立即执行一次
+document.addEventListener('DOMContentLoaded', function() {
+    getStatus();
+    
+    // 设置定时器，每30秒执行一次
+    setInterval(getStatus, 1000);
+    
+    console.log('状态自动更新已启动，每1秒刷新一次');
+});
+
+// 可选：添加手动刷新函数
+function refreshStatus() {
+    getStatus();
+}
+    
+    
+</script>
